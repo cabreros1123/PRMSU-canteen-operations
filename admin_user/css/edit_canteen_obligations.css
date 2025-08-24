@@ -1,0 +1,194 @@
+.tooltip .tooltiptext {
+    visibility: hidden;
+    max-width: 320px;
+    min-width: 180px;
+    width: auto;
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 6px 10px;
+    position: absolute;
+    z-index: 9999;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 0.95em;
+    white-space: pre-line;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    box-sizing: border-box;
+    display: block; /* Ensure block context */
+}
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+.status-group {
+    display: flex;  
+    gap: 8px;
+}
+.status-option {
+    position: relative;
+    padding: 6px 18px 6px 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+    border: 1px solid #ccc;
+    user-select: none;
+}
+.status-option[data-status="Complied"] { color: #388e3c; }
+.status-option[data-status="Pending"] { color: #fbc02d; }
+.status-option[data-status="Not Complied"] { color: #d32f2f; }
+.status-option.selected[data-status="Complied"] { background: #e8f5e9; border-color: #388e3c; }
+.status-option.selected[data-status="Pending"] { background: #fffde7; border-color: #fbc02d; }
+.status-option.selected[data-status="Not Complied"] { background: #ffebee; border-color: #d32f2f; }
+.status-check {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%) scale(0);
+    font-size: 1.2em;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+}
+.status-option.selected .status-check {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+}
+.status-option .status-check[data-status="Complied"] { color: #388e3c; }
+.status-option .status-check[data-status="Pending"] { color: #fbc02d; }
+.status-option .status-check[data-status="Not Complied"] { color: #d32f2f; }
+.status-group .status-option:hover { background: #f0f0f0; }
+#complyAllBtn {
+    margin-bottom: 10px;
+    padding: 6px 18px;
+    background: #388e3c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.messenger-box {
+    max-width: 500px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #f9f9f9;
+    padding: 16px;
+    box-shadow: 0 2px 8px #0001;
+}
+.messenger-messages {
+    max-height: 320px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+    padding-right: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.messenger-message {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.messenger-message.admin {
+    align-items: flex-end;
+}
+.messenger-bubble {
+    background: #1976d2;
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 16px;
+    word-break: break-word;
+    margin-bottom: 4px;
+    display: inline-block;
+    max-width: 350px; /* Set a max width for bubbles */
+    min-width: 80px;
+    width: auto;
+    box-sizing: border-box;
+    vertical-align: top;
+}
+.messenger-message.admin .messenger-bubble {
+    background: #388e3c;
+}
+.messenger-files {
+    margin-top: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.messenger-files a, .messenger-files img {
+    display: inline-block;
+    margin-top: 4px;
+    max-width: 120px;
+    max-height: 80px;
+    border-radius: 4px;
+    vertical-align: top;
+}
+.messenger-meta {
+    font-size: 0.85em;
+    color: #888;
+    margin-top: 2px;
+    align-self: flex-end;
+}
+.messenger-form-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background: #fff;
+    border-radius: 24px;
+    padding: 8px 12px;
+    box-shadow: 0 1px 4px #0001;
+    margin-top: 0;
+}
+.messenger-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 10px 16px;
+    border-radius: 20px;
+    background: #f0f0f0;
+    font-size: 1em;
+    margin-right: 6px;
+    transition: background 0.2s;
+}
+.messenger-input:focus {
+    background: #e3eafc;
+}
+.messenger-file-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-right: 6px;
+    color: #1976d2;
+    font-size: 1.3em;
+    transition: color 0.2s;
+}
+.messenger-file-label:hover {
+    color: #388e3c;
+}
+.messenger-file-input {
+    display: none;
+}
+.messenger-send-btn {
+    background: #1976d2;
+    border: none;
+    color: #fff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.messenger-send-btn:hover {
+    background: #388e3c;
+}

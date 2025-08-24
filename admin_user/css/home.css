@@ -1,0 +1,91 @@
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px; /* Add spacing between boxes */
+}
+.row1 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px; /* Add spacing between boxes */
+}
+
+.col-lg-3, .col-xs-6 {
+    flex: 1 1 calc(25% - 15px); /* 4 boxes per row with spacing */
+    max-width: calc(25% - 15px);
+    box-sizing: border-box;
+}
+
+.small-box {
+    position: relative;
+    background: #f4f4f4;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.small-box .inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.small-box h3 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.small-box p {
+    margin: 5px 0 0;
+    font-size: 16px;
+}
+
+.small-box .icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 40px;
+    opacity: 0.5;
+}
+
+.small-box-footer {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.1);
+    color: white;
+    text-decoration: none;
+    border-radius: 0 0 5px 5px;
+}
+
+.small-box-footer:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.bg-green {
+    background-color: #28a745;
+}
+
+.bg-primary {
+    background-color: #007bff;
+}
+
+.bg-purple {
+    background-color: #6f42c1;
+}
+
+.bg-red {
+    background-color: #dc3545;
+}
+.fade-in {
+opacity: 0; /* Start with the element invisible */
+transform: translateY(20px); /* Start slightly below its final position */
+animation: fadeIn 2s ease forwards; /* Apply the fade-in animation */
+}
+
+@keyframes fadeIn {
+     to {
+        opacity: 1; /* Fully visible */
+        transform: translateY(0); /* Move to its final position */
+        }
+}

@@ -1,0 +1,406 @@
+<?php
+include 'db.php';
+
+// Fetch the total sales from the database where del_status = 0
+$query = "SELECT SUM(product_sale) AS total_sales FROM sales WHERE del_status = 0";
+$result = $conn->query($query);
+$totalSales = 0;
+
+if ($result && $row = $result->fetch_assoc()) {
+    $totalSales = $row['total_sales'] ?? 0; // Default to 0 if no sales
+}
+
+// Fetch the count of active and not soft-deleted categories
+$query = "SELECT COUNT(*) AS total_categories FROM categories WHERE del_status = 0";
+$result = $conn->query($query);
+$totalCategories = 0;
+
+if ($result && $row = $result->fetch_assoc()) {
+    $totalCategories = $row['total_categories'] ?? 0; // Default to 0 if no categories
+}
+
+// Fetch the count of active and not soft-deleted cantines
+$query = "SELECT COUNT(*) AS total_cantines FROM cantines WHERE del_status = 0 AND active = 0";
+$result = $conn->query($query);
+$totalCantines = 0;
+
+if ($result && $row = $result->fetch_assoc()) {
+    $totalCantines = $row['total_cantines'] ?? 0; // Default to 0 if no cantines
+}
+
+// Fetch the count of not soft-deleted products
+$query = "SELECT COUNT(*) AS total_products FROM products WHERE del_status = 0";
+$result = $conn->query($query);
+$totalProducts = 0;
+
+if ($result && $row = $result->fetch_assoc()) {
+    $totalProducts = $row['total_products'] ?? 0; // Default to 0 if no products
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/home.css" />
+    <script src="js/chart.js"></script>
+    <script type="text/javascript" src="js/loader.js"></script>
+    <title>Home</title>
+</head>
+<style>
+body {
+    transition: margin-left 0.3s ease; /* Smooth transition for resizing */
+    margin-left: 100px; /* Default margin when sidebar is open */
+}
+</style>
+<body>
+    <?php require_once "sidebar.php"; ?>
+    <?php require_once "header.php"; ?>
+<br>
+    <div class="row">
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-green">
+                <div class="inner">
+                    <h3>₱<?php echo number_format($totalSales, 2); ?></h3> <!-- Display total sales -->
+                    <p>Sales</p>
+                </div>
+                <div class="icon">
+                    <i class="pesos"></i>
+                </div>
+                <a href="view_sales.php" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-primary">
+                <div class="inner">
+                    <h3><?php echo $totalCategories; ?></h3>
+                    <p>Categories</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-clipboard"></i>
+                </div>
+                <a href="category.php" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-purple">
+                <div class="inner">
+                    <h3><?php echo $totalCantines; ?></h3>
+                    <p>Cantines</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-person-add"></i>
+                </div>
+                <a href="cantine.php" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-red">
+                <div class="inner">
+                    <h3><?php echo $totalProducts; ?></h3>
+                    <p>Products</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-ios-cart"></i>
+                </div>
+                <a href="product.php" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h1 align="center" style="padding-top: 50px;">Sales Graph</h1>
+        <div style="margin: 20px 0; text-align: center;">
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" style="margin-right: 10px;" onchange="updateEndDateMin()">
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" style="margin-right: 10px;">
+    <button onclick="filterData()" style="padding: 5px 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        Filter
+    </button>
+</div>
+
+<script>
+    function updateEndDateMin() {
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate');
+
+        // Set the minimum value for the End Date to the selected Start Date
+        if (startDate) {
+            endDate.min = startDate;
+        }
+    }
+</script>
+    <!-- Line Chart Section -->
+    <div class="chart-container" style="position: relative; height:300px; width:100%; margin-top: 20px;">
+        <canvas id="salesLineChart"></canvas>
+    </div>
+   
+    <!-- Additional Boxes Section -->
+<div class="row1" style="margin-top: 30px; width: 100%; display: flex; justify-content: space-between; gap: 15px; height: 30vh;">
+    <div class="col-lg-4 col-xs-12" style="flex: 1; background: #17a2b8; color: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; justify-content: center;">
+        <h3 style="font-size: 24px; margin: 0;">Best Selling Products</h3>
+        <p style="margin: 5px 0 0; font-size: 16px;">See which products are selling the most</p>
+        <div id="myChart" style="width:100%; max-width:600px; height:300px; margin-top: 15px;"></div>
+    </div>
+
+    <div class="col-lg-4 col-xs-12" style="flex: 1; background:rgb(151, 95, 255); color: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; justify-content: center;">
+        <div class="col-lg-4 col-xs-12" style="flex: 1; background:rgb(136, 85, 231); color: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; justify-content: center;">
+        <h3 style="font-size: 24px; margin: 0;">Best Selling Canteens</h3>
+        <p style="margin: 5px 0 0; font-size: 16px;">See which canteens earn the most profit</p>
+        <div id="canteenChart" style="width:100%; max-width:700px; height:300px; margin-top: 15px;"></div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-xs-12" style="flex: 1; background: #28a745; color: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; justify-content: center;">
+    <h3 style="font-size: 24px; margin: 0;">Recent Products Update</h3>
+    <p style="margin: 5px 0 15px; font-size: 16px;">View the latest products updates to the system</p>
+    <div style="overflow-y: auto; max-height: 310px;">
+        <table style="width: 100%; border-collapse: collapse; color: white;">
+            <thead>
+                <tr style="background: rgba(0, 0, 0, 0.2);">
+                    <th style="padding: 10px; text-align: left;">Image</th>
+                    <th style="padding: 10px; text-align: left;">Name</th>
+                    <th style="padding: 10px; text-align: left;">Date</th>
+                </tr>
+            </thead>
+            <tbody id="recentProductsTable">
+                <!-- Rows will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+
+<script>
+    // Fetch recent products from the database
+    fetch('get_recent_products.php')
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('recentProductsTable');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            data.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="padding: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.2);">
+                        <img src="${product.image}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                    </td>
+                    <td style="padding: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.2);">${product.description}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.2);">${product.date}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Error fetching recent products:', error));
+</script>
+
+<script>
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawCanteenChart);
+
+    function drawCanteenChart(startDate = null, endDate = null) {
+        // Build the fetch URL with optional date range
+        let url = 'get_best_selling_canteens.php';
+        if (startDate && endDate) {
+            url += `?start_date=${startDate}&end_date=${endDate}`;
+        }
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const chartData = [['Canteen', 'Profit']];
+                data.forEach(item => {
+                    chartData.push([item.name, item.total_profit]);
+                });
+
+                const dataTable = google.visualization.arrayToDataTable(chartData);
+
+                const options = {
+                    title: 'Top Canteens by Profit',
+                    backgroundColor: 'rgb(136, 85, 231)',
+                    titleTextStyle: { color: 'white', fontSize: 18 },
+                    legendTextStyle: { color: 'white' },
+                    hAxis: { textStyle: { color: 'white' }, title: 'Profit', titleTextStyle: { color: 'white' } },
+                    vAxis: { textStyle: { color: 'white' }, title: 'Canteens', titleTextStyle: { color: 'white' } },
+                    colors: ['#42A5F5'],
+                };
+
+                const chart = new google.visualization.BarChart(document.getElementById('canteenChart'));
+                chart.draw(dataTable, options);
+            })
+            .catch(error => console.error('Error fetching canteen data:', error));
+    }
+</script>
+
+<script>
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        // Fetch data from the updated backend
+        fetch('get_best_selling_products.php')
+            .then(response => response.json())
+            .then(data => {
+                // Sort data by quantity in descending order and take the top 10
+                const topProducts = data
+                    .sort((a, b) => b.quantity - a.quantity)
+                    .slice(0, 10);
+
+                // Prepare data for the chart
+                const chartData = [['Product', 'Quantity Sold']];
+                topProducts.forEach(item => {
+                    chartData.push([item.description, item.quantity]); // Use the real product name
+                });
+
+                // Create the data table
+                const dataTable = google.visualization.arrayToDataTable(chartData);
+
+                // Chart options
+                const options = {
+                    title: 'Top 10 Best Selling Products',
+                    pieHole: 0.4, // Optional: Makes it a donut chart
+                    backgroundColor: '#17a2b8',
+                    titleTextStyle: { color: 'white', fontSize: 18 },
+                    legendTextStyle: { color: 'white' }
+                };
+
+                // Draw the chart
+                const chart = new google.visualization.PieChart(document.getElementById('myChart'));
+                chart.draw(dataTable, options);
+            })
+            .catch(error => console.error('Error fetching product data:', error));
+    }
+</script>
+<script>
+let salesLineChartInstance; // Declare a variable to store the chart instance
+
+function filterData() {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+
+    // If no date range is selected, fetch all data
+    if (!startDate || !endDate) {
+        drawCanteenChart(); // Fetch all canteen data
+        drawChart();        // Fetch all product data
+        drawSalesLineChart(); // Fetch all sales data
+        updateSalesBox();   // Fetch total sales for all data
+        return;
+    }
+
+    // Fetch filtered data based on the selected date range
+    drawCanteenChart(startDate, endDate);
+    drawChart(startDate, endDate);
+    drawSalesLineChart(startDate, endDate);
+    updateSalesBox(startDate, endDate); // Fetch total sales for the selected date range
+}
+
+function drawSalesLineChart(startDate = null, endDate = null) {
+    // Build the fetch URL with optional date range
+    let url = 'line_chart_data.php';
+    if (startDate && endDate) {
+        url += `?start_date=${startDate}&end_date=${endDate}`;
+    }
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.map(item => item.sale_date); // Extract sale dates
+            const productCosts = data.map(item => item.total_cost); // Extract product costs
+            const productSales = data.map(item => item.total_sales); // Extract product sales
+            const totalProfits = data.map(item => item.total_profit); // Extract total profits
+
+            const ctx = document.getElementById('salesLineChart').getContext('2d');
+
+            // Destroy the previous chart instance if it exists
+            if (salesLineChartInstance) {
+                salesLineChartInstance.destroy();
+            }
+
+            // Create a new chart instance
+            salesLineChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Product Cost',
+                            data: productCosts,
+                            borderColor: 'rgb(99, 161, 255)',
+                            backgroundColor: 'rgba(99, 161, 255, 0.2)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Product Sales',
+                            data: productSales,
+                            borderColor: 'rgb(60, 235, 54)',
+                            backgroundColor: 'rgba(84, 235, 54, 0.2)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Profit',
+                            data: totalProfits,
+                            borderColor: 'rgb(255, 99, 132)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Date' } },
+                        y: { title: { display: true, text: 'Amount (₱)' }, beginAtZero: false }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching sales data:', error));
+}
+
+function updateSalesBox(startDate = null, endDate = null) {
+    // Build the fetch URL with optional date range
+    let url = 'get_total_sales.php';
+    if (startDate && endDate) {
+        url += `?start_date=${startDate}&end_date=${endDate}`;
+    }
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            // Update the sales box with the fetched total sales
+            const salesBox = document.querySelector('.small-box.bg-green .inner h3');
+            salesBox.textContent = `₱${parseFloat(data.total_sales).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+        })
+        .catch(error => console.error('Error fetching total sales:', error));
+}
+
+google.charts.setOnLoadCallback(() => {
+    drawCanteenChart(); // Load all canteen data
+    drawChart();        // Load all product data
+    drawSalesLineChart(); // Load all sales data
+    updateSalesBox();   // Load total sales for all data
+});
+</script>
+
+</body>
+</html>

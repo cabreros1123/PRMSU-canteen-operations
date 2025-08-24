@@ -1,0 +1,250 @@
+.messenger-modal-flex {
+    display: flex;
+    flex-direction: row;
+    height: 790px;      /* Set your desired height */
+    min-height: 300px;
+    max-height: 90vh;   /* Optional: responsive max height */
+    position: relative;
+    overflow: hidden;
+}
+
+.messenger-box {
+    display: flex;
+    flex-direction: column;
+    height: 100%;       /* Fill modal height */
+    min-height: 0;
+    flex: 1 1 auto;
+    position: relative;
+}
+
+.messenger-messages {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: 100%;
+    overflow-y: auto;
+    margin-bottom: 0;
+    padding: 18px 18px 0 18px;
+    background: linear-gradient(135deg, #f7fafc 60%, #e3f2fd 100%);
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+.messenger-message {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.messenger-message.admin {
+    align-items: flex-end;
+}
+
+.messenger-message.canteen {
+    align-items: flex-start;
+}
+
+.messenger-bubble {
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px 14px;
+    box-shadow: 0 1px 4px #1976d210;
+    margin-bottom: 2px;
+    max-width: 70%;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+/* --- Admin message bubble blue like Messenger --- */
+.messenger-message.admin .messenger-bubble {
+    background: #0084ff;
+    color: #fff;
+}
+
+.messenger-meta {
+    font-size: 0.9em;
+    color: #888;
+    margin-left: 8px;
+}
+
+.messenger-form-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 12px 18px 14px 18px;
+    background: #f7fafc;
+    border-top: 1px solid #e3eaf2;
+}
+
+.messenger-input {
+    flex: 1;
+    border: none;
+    background: #f7fafc;
+    font-size: 1.08em;
+    padding: 8px 10px;
+    border-radius: 8px;
+    outline: none;
+}
+
+.messenger-file-input {
+    display: none;
+}
+
+/* Messenger file label and file name preview */
+.messenger-file-label {
+    cursor: pointer;
+    color: #1976d2;
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.messenger-file-label .file-names {
+    font-size: 0.95em;
+    color: #1976d2;
+    margin-left: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+    display: none;
+}
+
+.messenger-file-label.has-files .file-names {
+    display: inline;
+}
+
+/* Messenger send button */
+.messenger-send-btn {
+    background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    box-shadow: 0 2px 8px #1976d220;
+    margin-left: 4px;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.messenger-send-btn:hover {
+    background: linear-gradient(90deg, #1565c0 60%, #1976d2 100%);
+    box-shadow: 0 4px 16px #1976d240;
+}
+
+/* Messenger file preview area */
+.messenger-file-preview {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 64px;
+    z-index: 5;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 0 18px;
+    min-height: 0;
+    background: rgba(247, 250, 252, 0.7);
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.messenger-file-preview img,
+.messenger-file-preview div {
+    pointer-events: auto;
+}
+
+/* Messenger files inside messages */
+.messenger-files img {
+    max-width: 80px;
+    max-height: 80px;
+    margin: 4px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px #0001;
+    cursor: pointer;
+}
+
+.messenger-canteen-sidebar {
+    width: 170px;
+    background: #f7fafc;
+    border-right: 1px solid #e3eaf2;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px 0 0 0;
+    gap: 8px;
+    min-height: 340px;
+    max-height: 100%;
+    height: 100%;           /* Fill modal height, not viewport */
+    overflow-y: auto;       /* Enable vertical scroll */
+    position: relative;     /* Remove sticky/fixed for scrolling */
+    left: unset;
+    top: unset;
+    z-index: 10;
+}
+
+.canteen-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #e3f2fd;
+    color: #1976d2;
+    font-weight: bold;
+    font-size: 1.3em;
+    border: none;
+    outline: none;
+    margin-bottom: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+}
+
+.canteen-avatar.active, .canteen-avatar:hover {
+    background: #1976d2;
+    color: #fff;
+}
+
+.canteen-softbox {
+    background: #e3f2fd;
+    border-radius: 10px;
+    margin: 0 8px 4px 8px;
+    padding: 10px 12px 8px 12px;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    font-size: 1em;
+    color: #1976d2;
+    border: none;
+    outline: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    box-shadow: 0 1px 4px #1976d210;
+}
+
+.canteen-softbox.active, .canteen-softbox:hover {
+    background: #1976d2;
+    color: #fff;
+}
+
+.canteen-softbox-name {
+    font-weight: bold;
+    font-size: 1.08em;
+    margin-bottom: 2px;
+}
+
+.canteen-softbox-owner {
+    font-size: 0.95em;
+    color: inherit;
+    opacity: 0.85;
+}

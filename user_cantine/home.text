@@ -1,0 +1,182 @@
+<?php
+session_start(); // Ensure session is started before using $_SESSION
+
+// Check if 'id_cantine' is set in session to avoid warnings
+if (!isset($_SESSION['id_cantine'])) {
+    die('Error: You are not authorized to view this page. Please log in.');
+}
+
+$id_cantine = $_SESSION['id_cantine']; // Get the logged-in canteen's ID
+
+include 'db.php';
+
+// Fetch the total product sales for the logged-in canteen where del_status = 0
+$query = "SELECT SUM(product_sale) AS total_sales FROM sales WHERE del_status = 0 AND id_cantine = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param('i', $id_cantine);
+$stmt->execute();
+$result = $stmt->get_result();
+$totalSales = 0;
+
+if ($result && $row = $result->fetch_assoc()) {
+    $totalSales = $row['total_sales'] ?? 0; // Default to 0 if no sales
+}
+
+// Fetch the count of not soft-deleted products
+$query = "SELECT COUNT(*) AS total_products FROM products WHERE del_status = 0";
+$result = $conn->query($query);
+$totalProducts = 0;
+
+if ($result && $row = $result->fetch_assoc()) {
+    $totalProducts = $row['total_products'] ?? 0; // Default to 0 if no products
+}
+
+// Fetch the count of active and not soft-deleted categories
+$query = "SELECT COUNT(*) AS total_categories FROM categories WHERE del_status = 0";
+$result = $conn->query($query);
+$totalCategories = 0;
+
+if ($result && $row = $result->fetch_assoc()) {
+    $totalCategories = $row['total_categories'] ?? 0; // Default to 0 if no categories
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="js/chart.js"></script>
+    <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+<?php require_once "header.php"; ?>
+    <div class="row">
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-green">
+                <div class="inner">
+                    <h3>₱<?php echo number_format($totalSales, 2); ?></h3> <!-- Display total sales -->
+                    <p>Sales</p>
+                </div>
+                <div class="icon">
+                    <i class="pesos"></i>
+                </div>
+                <a href="view_sales.php" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-primary">
+                <div class="inner">
+                    <h3><?php echo $totalCategories; ?></h3> <!-- Display total categories -->
+                    <p>Categories</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-clipboard"></i>
+                </div>
+                <a href="category.php" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-red">
+                <div class="inner">
+                    <h3><?php echo $totalProducts; ?></h3> <!-- Display total products -->
+                    <p>Products</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-ios-cart"></i>
+                </div>
+                <a href="product.php" class="small-box-footer">
+                    More info <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h1 align="center" style="padding-top: 10px;">Sales Graph</h1>
+    </div>
+    <div class="chart-container" style="position: relative; height:300px; width:99%; margin-top: 20px;">
+        <canvas id="salesLineChart"></canvas>
+    </div>
+
+<script>
+        // JavaScript for fetching data and rendering the chart
+        fetch('line_chart_data.php')
+            .then(response => response.json())
+            .then(data => {
+                const labels = data.map(item => item.sale_date);
+                const productCosts = data.map(item => item.total_cost);
+                const productSales = data.map(item => item.total_sales);
+                const totalProfits = data.map(item => item.total_profit); // Include profit data
+
+                const ctx = document.getElementById('salesLineChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Product Cost',
+                                data: productCosts,
+                                borderColor: 'rgb(99, 161, 255)',
+                                backgroundColor: 'rgba(99, 161, 255, 0.2)',
+                                fill: true,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Product Sales',
+                                data: productSales,
+                                borderColor: 'rgb(60, 235, 54)',
+                                backgroundColor: 'rgba(84, 235, 54, 0.2)',
+                                fill: true,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Profit',
+                                data: totalProfits,
+                                borderColor: 'rgb(255, 99, 132)', // Red for profit (negative values will show below the x-axis)
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                fill: true,
+                                tension: 0.4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, // Allow the chart to resize freely
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Date'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Amount (₱)'
+                                },
+                                beginAtZero: false // Allow negative values to be displayed
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching chart data:', error));
+    </script>
+</body>
+</html>

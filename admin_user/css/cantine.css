@@ -1,0 +1,213 @@
+/* Modal Overlay */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(30, 34, 90, 0.35);
+    justify-content: center;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+/* Modal Content (Mobile Style) */
+.modal-content {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px #1976d220, 0 2px 8px #1976d210;
+    padding: 28px 18px 18px 18px;
+    width: 95vw;
+    max-width: 400px;
+    margin: 0 8px;
+    position: relative;
+    animation: modalPopIn 0.18s;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+@keyframes modalPopIn {
+    from { transform: translateY(40px) scale(0.98); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+.modal-close {
+    position: absolute;
+    top: 10px; right: 14px;
+    background: none;
+    border: none;
+    font-size: 2em;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.modal-close:hover {
+    color: #d32f2f;
+}
+.modal-form .form-group {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.modal-form label {
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: #1976d2;
+}
+.modal-form input[type="text"],
+.modal-form input[type="email"],
+.modal-form input[type="password"] {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #bbb;
+    font-size: 1em;
+    outline: none;
+    transition: border 0.2s;
+}
+.modal-form input:focus {
+    border: 1.5px solid #1976d2;
+}
+#modalSubmitButton {
+    background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 0;
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px #1976d220;
+}
+#modalSubmitButton:hover {
+    background: linear-gradient(90deg, #1565c0 60%, #1976d2 100%);
+}
+@media (max-width: 500px) {
+    .modal-content {
+        max-width: 98vw;
+        padding: 18px 4vw 12px 4vw;
+    }
+    .modal-form label {
+        font-size: 1em;
+    }
+    #modalSubmitButton {
+        font-size: 1em;
+        padding: 10px 0;
+    }
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 24px;
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px #1976d210;
+    font-size: 1em;
+}
+th, td {
+    padding: 10px 8px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+}
+th {
+    background: #1976d2;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.05em;
+}
+tr:last-child td {
+    border-bottom: none;
+}
+tr:nth-child(even) td {
+    background: #f7fafd;
+}
+@media (max-width: 700px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+    thead tr {
+        display: none;
+    }
+    tr {
+        margin-bottom: 18px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 1px 6px #1976d210;
+        padding: 8px 0;
+    }
+    td {
+        padding: 10px 12px;
+        border: none;
+        position: relative;
+    }
+    td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #1976d2;
+        display: block;
+        margin-bottom: 2px;
+        font-size: 0.97em;
+    }
+}
+
+/* Button Styles */
+.btn-add-cantine {
+    background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 22px;
+    font-size: 1.08em;
+    font-weight: 600;
+    margin-bottom: 18px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px #1976d220;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.btn-add-cantine:hover {
+    background: linear-gradient(90deg, #1565c0 60%, #1976d2 100%);
+}
+
+.btn-edit, .btn-delete, .btn-status {
+    border: none;
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-size: 0.98em;
+    font-weight: 500;
+    margin: 2px 2px;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+}
+.btn-edit {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+.btn-edit:hover {
+    background: #1976d2;
+    color: #fff;
+}
+.btn-delete {
+    background: #ffebee;
+    color: #d32f2f;
+}
+.btn-delete:hover {
+    background: #d32f2f;
+    color: #fff;
+}
+.btn-status.active {
+    background: #e8f5e9;
+    color: #43a047;
+}
+.btn-status.deactive {
+    background: #ffebee;
+    color: #d32f2f;
+}
+.btn-status:hover {
+    filter: brightness(0.95);
+    box-shadow: 0 2px 8px #1976d220;
+}

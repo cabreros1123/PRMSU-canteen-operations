@@ -1,0 +1,161 @@
+body {
+    transition: margin-left 0.3s ease;
+    margin-left: 100px;
+}
+/* Styling for the product table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #4CAF50;
+    color: white;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+table img {
+    border-radius: 5px;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+.btn-add-product {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease;
+}
+.btn-add-product:hover {
+    background-color: #218838;
+}
+/* Modal styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.modal.active {
+    display: flex; /* Show modal when active */
+}
+.modal-content {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    width: 50%; /* Set width to 50% of the screen */
+    max-width: 600px; /* Optional: Limit the maximum width */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+.modal-content h2 {
+    margin-top: 0;
+    font-size: 18px; /* Smaller font size */
+}
+.modal-content form input,
+.modal-content form select {
+    width: 90%; /* Reduced width */
+    padding: 8px; /* Smaller padding */
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px; /* Smaller font size */
+}
+.modal-content form button {
+    background-color: #28a745;
+    color: white;
+    padding: 8px; /* Smaller padding */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 90%; /* Reduced width */
+    font-size: 14px; /* Smaller font size */
+}
+.modal-content form button:hover {
+    background-color: #218838;
+}
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: #333;
+}
+.modal-close:hover {
+    color: #d9534f; /* Red color on hover */
+}
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Add spacing between form fields */
+}
+
+.modal-content form label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.modal-content form label span {
+    flex: 1; /* Ensure the label text takes up space on the left */
+    text-align: left; /* Align text to the left */
+    font-size: 14px; /* Adjust font size */
+    margin-right: 10px; /* Add spacing between label and input */
+}
+
+.modal-content form input,
+.modal-content form select,
+.modal-content form button {
+    flex: 2; /* Ensure inputs take up more space */
+    width: 100%; /* Ensure inputs fill the available space */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Styling for the search bar */
+.search-container {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.search-container input {
+    padding: 10px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}

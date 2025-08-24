@@ -1,0 +1,204 @@
+.messenger-box {
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    height: 100%;
+}
+
+.messenger-messages {
+    flex: 1 1 auto;
+    max-height: none;
+    min-height: 180px;
+    overflow-y: auto;
+    margin-bottom: 0;
+    padding: 18px 18px 0 18px;
+    background: linear-gradient(135deg, #f7fafc 60%, #e3f2fd 100%);
+}
+
+.messenger-message {
+    margin-bottom: 10px;
+}
+
+.messenger-message.admin .messenger-bubble {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.messenger-bubble {
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px 14px;
+    box-shadow: 0 1px 4px #1976d210;
+    margin-bottom: 2px;
+}
+
+.messenger-meta {
+    font-size: 0.9em;
+    color: #888;
+    margin-left: 8px;
+}
+
+.messenger-form-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 12px 18px 14px 18px;
+    background: #f7fafc;
+    border-top: 1px solid #e3eaf2;
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+}
+
+.messenger-input {
+    flex: 1;
+    border: none;
+    background: #f7fafc;
+    font-size: 1.08em;
+    padding: 8px 10px;
+    border-radius: 8px;
+    outline: none;
+}
+
+.messenger-file-input {
+    display: none;
+}
+
+.messenger-file-label {
+    cursor: pointer;
+    color: #1976d2;
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.messenger-file-label .file-names {
+    font-size: 0.95em;
+    color: #1976d2;
+    margin-left: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+    display: none;
+}
+
+.messenger-file-label.has-files .file-names {
+    display: inline;
+}
+
+.messenger-send-btn {
+    background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    box-shadow: 0 2px 8px #1976d220;
+    margin-left: 4px;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.messenger-send-btn:hover {
+    background: linear-gradient(90deg, #1565c0 60%, #1976d2 100%);
+    box-shadow: 0 4px 16px #1976d240;
+}
+
+.messenger-files img {
+    max-width: 80px;
+    max-height: 80px;
+    margin: 4px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px #0001;
+    cursor: pointer;
+}
+
+.messenger-modal-flex {
+    display: flex;
+    height: 100%;
+    min-height: 340px;
+}
+
+.messenger-canteen-sidebar {
+    width: 170px;
+    background: #f7fafc;
+    border-right: 1px solid #e3eaf2;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px 0 0 0;
+    gap: 8px;
+    min-height: 340px;
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.canteen-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #e3f2fd;
+    color: #1976d2;
+    font-weight: bold;
+    font-size: 1.3em;
+    border: none;
+    outline: none;
+    margin-bottom: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+}
+
+.canteen-avatar.active, .canteen-avatar:hover {
+    background: #1976d2;
+    color: #fff;
+}
+
+.canteen-softbox {
+    background: #e3f2fd;
+    border-radius: 10px;
+    margin: 0 8px 4px 8px;
+    padding: 10px 12px 8px 12px;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    font-size: 1em;
+    color: #1976d2;
+    border: none;
+    outline: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    box-shadow: 0 1px 4px #1976d210;
+}
+
+.canteen-softbox.active, .canteen-softbox:hover {
+    background: #1976d2;
+    color: #fff;
+}
+
+.canteen-softbox-name {
+    font-weight: bold;
+    font-size: 1.08em;
+    margin-bottom: 2px;
+}
+
+.canteen-softbox-owner {
+    font-size: 0.95em;
+    color: inherit;
+    opacity: 0.85;
+}

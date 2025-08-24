@@ -1,0 +1,300 @@
+<?php
+require_once 'db.php';
+
+// Fetch canteens
+$canteens = $conn->query("SELECT id, name FROM cantines WHERE active=0 AND del_status=0");
+
+// Fetch obligations template
+$obligation_templates = [];
+$res = $conn->query("SELECT id, obligation FROM obligation_category WHERE del_status=0 ORDER BY date_added ASC");
+while ($row = $res->fetch_assoc()) {
+    $obligation_templates[] = $row;
+}
+
+// Handle form submission (always INSERT, never UPDATE)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cantine_id'])) {
+    $cantine_id = intval($_POST['cantine_id']);
+    $obligation_and_status = [];
+    foreach ($obligation_templates as $ob) {
+        $status = isset($_POST['status'][$ob['id']]) ? $_POST['status'][$ob['id']] : 'Pending';
+        $obligation_and_status[] = [
+            'id' => $ob['id'],
+            'obligation' => $ob['obligation'],
+            'status' => $status
+        ];
+    }
+    $json = $conn->real_escape_string(json_encode($obligation_and_status));
+    $date_added = date('Y-m-d H:i:s');
+    $conn->query("INSERT INTO obligations (cantine_id, obligation_and_status, date_added, del_status) VALUES ($cantine_id, '$json', '$date_added', 0)");
+    echo "<script>alert('Inspection saved!');window.location='edit_canteen_obligations.php?cantine_id=$cantine_id';</script>";
+    exit;
+}
+
+// Get selected canteen
+$cantine_id = isset($_GET['cantine_id']) ? intval($_GET['cantine_id']) : 0;
+
+// Fetch all inspections for this canteen
+$inspections = [];
+if ($cantine_id) {
+    $res = $conn->query("SELECT * FROM obligations WHERE cantine_id=$cantine_id AND del_status=0 ORDER BY date_added DESC");
+    while ($row = $res->fetch_assoc()) {
+        $row['obligation_and_status'] = json_decode($row['obligation_and_status'], true);
+        $inspections[] = $row;
+    }
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add/View Canteen Obligations</title>
+    <style>
+        .btn { padding: 6px 14px; border: 1px solid #888; background: #eee; cursor: pointer; border-radius: 4px; }
+        .btn-primary { background: #1976d2; color: #fff; border: none; }
+        .btn-secondary { background: #888; color: #fff; border: none; }
+        .btn-sm { font-size: 0.9em; padding: 4px 10px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px;}
+        th, td { border: 1px solid #aaa; padding: 6px 10px; }
+        th { background: #f0f0f0; }
+        .tooltip {
+    position: relative;
+    cursor: pointer;
+}
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: max-content;
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 6px 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Position above */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 0.95em;
+    white-space: pre-line;
+}
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+.status-group {
+    display: flex;
+    gap: 8px;
+}
+.status-option {
+    position: relative;
+    padding: 6px 18px 6px 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+    border: 1px solid #ccc;
+    user-select: none;
+}
+.status-option[data-status="Complied"] { color: #388e3c; }
+.status-option[data-status="Pending"] { color: #fbc02d; }
+.status-option[data-status="Not Complied"] { color: #d32f2f; }
+.status-option.selected[data-status="Complied"] { background: #e8f5e9; border-color: #388e3c; }
+.status-option.selected[data-status="Pending"] { background: #fffde7; border-color: #fbc02d; }
+.status-option.selected[data-status="Not Complied"] { background: #ffebee; border-color: #d32f2f; }
+.status-check {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%) scale(0);
+    font-size: 1.2em;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+}
+.status-option.selected .status-check {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+}
+.status-option .status-check[data-status="Complied"] { color: #388e3c; }
+.status-option .status-check[data-status="Pending"] { color: #fbc02d; }
+.status-option .status-check[data-status="Not Complied"] { color: #d32f2f; }
+.status-group .status-option:hover { background: #f0f0f0; }
+#complyAllBtn {
+    margin-bottom: 10px;
+    padding: 6px 18px;
+    background: #388e3c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+    </style>
+</head>
+<body style="padding: 24px;">
+<?php require_once "sidebar.php"; ?>
+<?php require_once "header.php"; ?>
+<div>
+    <h2>Add/View Canteen Obligations</h2>
+    <br>
+    <a href="food_safety.php" class="btn btn-secondary" style="margin-bottom:16px;">&larr; Back to Food Safety</a>
+    <br><br>
+    <form method="post">
+        <input type="hidden" name="cantine_id" value="<?= $cantine_id ?>">
+        <button type="button" id="complyAllBtn">Comply All</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Obligation</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($obligation_templates as $ob): ?>
+                <tr class="obligation-row">
+                    <td><?= $ob['id'] ?></td>
+                    <td><?= htmlspecialchars($ob['obligation']) ?></td>
+                    <td>
+                        <div class="status-group">
+                            <div class="status-option" data-status="Complied">
+                                <span class="status-check" data-status="Complied">&#10003;</span>
+                                Complied
+                            </div>
+                            <div class="status-option" data-status="Pending">
+                                <span class="status-check" data-status="Pending">&#10003;</span>
+                                Pending
+                            </div>
+                            <div class="status-option" data-status="Not Complied">
+                                <span class="status-check" data-status="Not Complied">&#10003;</span>
+                                Not Complied
+                            </div>
+                            <input type="hidden" name="status[<?= $ob['id'] ?>]" value="Pending">
+                        </div>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary" style="margin-top:12px;">Save Inspection</button>
+    </form>
+    <h3 style="margin-top:32px;">Past Inspections</h3>
+    <?php
+    $total_obligations = count($obligation_templates);
+    if ($inspections): ?>
+        <div style="max-width:700px;">
+        <?php foreach ($inspections as $idx => $insp): ?>
+            <?php
+                $complied = 0;
+                $pending = 0;
+                $complied_tooltip = "";
+                $pending_tooltip = "";
+                foreach ($insp['obligation_and_status'] as $item) {
+                    if ($item['status'] === 'Complied') {
+                        $complied++;
+                        $complied_tooltip .= "• {$item['obligation']}\n";
+                    }
+                    if ($item['status'] === 'Pending') {
+                        $pending++;
+                        $pending_tooltip .= "• {$item['obligation']}\n";
+                    }
+                }
+                $color = '#d32f2f'; // red
+                if ($complied == $total_obligations) {
+                    $color = '#388e3c'; // green
+                } elseif ($complied > 2) {
+                    $color = '#fbc02d'; // yellow
+                }
+            ?>
+            <div style="margin-bottom:8px;">
+                <button type="button"
+                    onclick="toggleInspection('insp<?= $idx ?>')"
+                    style="width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center;padding:10px 14px;font-size:1em;border:1px solid #aaa;background:#f8f8f8;cursor:pointer;border-radius:4px;">
+                    <span><?= $insp['date_added'] ?></span>
+                    <span class="tooltip" style="margin-left:10px; color:<?= $color ?>; font-weight:bold;">
+                        Complied <?= $complied ?>/<?= $total_obligations ?>
+                        <span class="tooltiptext"><?= $complied_tooltip ? "Complied:\n" . trim($complied_tooltip) : "No complied obligations" ?></span>
+                    </span>
+                    <?php if ($pending > 0): ?>
+                        <span class="tooltip" style="margin-left:10px; color:#fbc02d; font-weight:bold;">
+                            Pending: <?= $pending ?>
+                            <span class="tooltiptext"><?= $pending_tooltip ? "Pending:\n" . trim($pending_tooltip) : "No pending obligations" ?></span>
+                        </span>
+                    <?php endif; ?>
+                    <span id="icon-insp<?= $idx ?>" style="margin-left:10px;">&#9660;</span>
+                </button>
+                <div id="insp<?= $idx ?>" style="display:none;padding:0 10px 10px 10px;">
+                    <table style="margin-top:10px;">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Obligation</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($insp['obligation_and_status'] as $item): ?>
+                            <tr>
+                                <td><?= $item['id'] ?></td>
+                                <td><?= htmlspecialchars($item['obligation']) ?></td>
+                                <td><?= htmlspecialchars($item['status']) ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <?php endforeach; ?>
+        </div>
+        <script>
+        function toggleInspection(id) {
+            var el = document.getElementById(id);
+            var icon = document.getElementById('icon-' + id);
+            if (el.style.display === "none" || el.style.display === "") {
+                el.style.display = "block";
+                icon.innerHTML = "&#9650;"; // up arrow
+            } else {
+                el.style.display = "none";
+                icon.innerHTML = "&#9660;"; // down arrow
+            }
+        }
+        </script>
+    <?php else: ?>
+        <p>No inspections yet for this canteen.</p>
+    <?php endif; ?>
+    <?php ?>
+</div>
+<script>
+function setStatus(row, status) {
+    // Remove selected from all
+    row.querySelectorAll('.status-option').forEach(opt => {
+        opt.classList.remove('selected');
+    });
+    // Set selected
+    var selected = row.querySelector('.status-option[data-status="' + status + '"]');
+    selected.classList.add('selected');
+    // Set hidden input value
+    row.querySelector('input[type="hidden"]').value = status;
+}
+function complyAll() {
+    document.querySelectorAll('.obligation-row').forEach(row => {
+        setStatus(row, 'Complied');
+    });
+}
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize status selectors
+    document.querySelectorAll('.obligation-row').forEach(row => {
+        let current = row.querySelector('input[type="hidden"]').value;
+        setStatus(row, current);
+        row.querySelectorAll('.status-option').forEach(opt => {
+            opt.onclick = function() {
+                setStatus(row, opt.getAttribute('data-status'));
+            };
+        });
+    });
+    // Comply all button
+    var btn = document.getElementById('complyAllBtn');
+    if (btn) btn.onclick = complyAll;
+});
+</script>
+</body>
+</html>

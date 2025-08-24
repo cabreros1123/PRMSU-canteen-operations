@@ -1,0 +1,42 @@
+<table border="1">
+    <tr><td colspan="6" style="font-weight:bold;">NAME: Cabreros, STALL #1</td></tr>
+    <tr><td colspan='6' style='background:#3a6ea5;color:#fff;font-weight:600;'>MONTHLY RENTAL</td></tr><tr>
+        <th>#</th>
+        <th>BILL MONTH</th>
+        <th>BUSINESS NAME</th>
+        <th>MONTHLY RENTAL PAYMENT</th>
+        <th>OR NO.</th>
+        <th>PAYMENT DATE</th>
+    </tr><tr><td>1</td><td>JANUARY</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>2</td><td>FEBRUARY</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>3</td><td>MARCH</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>4</td><td>APRIL</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>5</td><td>MAY</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>6</td><td>JUNE</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>7</td><td>JULY</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>8</td><td>AUGUST</td><td>cabs</td><td>345.00</td><td>1123</td><td>2025-08-01 20:49:49</td></tr><tr><td>9</td><td>SEPTEMBER</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>10</td><td>OCTOBER</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>11</td><td>NOVEMBER</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>12</td><td>DECEMBER</td><td>cabs</td><td></td><td></td><td></td></tr><tr style='font-weight:bold;'><td colspan='3'>TOTAL</td><td>345.00</td><td colspan='2'></td></tr>    <tr><td colspan='6' style='background:#3a6ea5;color:#fff;font-weight:600;'>MONTHLY ELECTRIC</td></tr><tr>
+        <th>#</th>
+        <th>BILL MONTH</th>
+        <th>BUSINESS NAME</th>
+        <th>PAYMENT TOTAL</th>
+        <th>OR NO.</th>
+        <th>PAYMENT DATE</th>
+    </tr><tr><td>1</td><td>JANUARY</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>2</td><td>FEBRUARY</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>3</td><td>MARCH</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>4</td><td>APRIL</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>5</td><td>MAY</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>6</td><td>JUNE</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>7</td><td>JULY</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>8</td><td>AUGUST</td><td>cabs</td><td>3,245.00</td><td>1123</td><td>2025-08-01 20:49:49</td></tr><tr><td>9</td><td>SEPTEMBER</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>10</td><td>OCTOBER</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>11</td><td>NOVEMBER</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>12</td><td>DECEMBER</td><td>cabs</td><td></td><td></td><td></td></tr><tr style='font-weight:bold;'><td colspan='3'>TOTAL</td><td>3,245.00</td><td colspan='2'></td></tr>    <tr><td colspan='6' style='background:#3a6ea5;color:#fff;font-weight:600;'>MONTHLY WATER</td></tr><tr>
+        <th>#</th>
+        <th>BILL MONTH</th>
+        <th>BUSINESS NAME</th>
+        <th>PAYMENT TOTAL</th>
+        <th>OR NO.</th>
+        <th>PAYMENT DATE</th>
+    </tr><tr><td>1</td><td>JANUARY</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>2</td><td>FEBRUARY</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>3</td><td>MARCH</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>4</td><td>APRIL</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>5</td><td>MAY</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>6</td><td>JUNE</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>7</td><td>JULY</td><td>cabs</td><td>2,345.00</td><td>1123</td><td>2025-08-01 20:49:49</td></tr><tr><td>8</td><td>AUGUST</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>9</td><td>SEPTEMBER</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>10</td><td>OCTOBER</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>11</td><td>NOVEMBER</td><td>cabs</td><td></td><td></td><td></td></tr><tr><td>12</td><td>DECEMBER</td><td>cabs</td><td></td><td></td><td></td></tr><tr style='font-weight:bold;'><td colspan='3'>TOTAL</td><td>2,345.00</td><td colspan='2'></td></tr>    <tr><td colspan="6" style="background:#3a6ea5;color:#fff;font-weight:600;">OTHERS</td></tr>
+    <tr>
+        <th>#</th>
+        <th>NAME</th>
+        <th>PAYMENT TOTAL</th>
+        <th>OR NO.</th>
+        <th>PAYMENT DATE</th>
+        <th></th>
+    </tr>
+        <tr>
+        <td>1</td>
+        <td>karaoke type</td>
+        <td>333.00</td>
+        <td>1123</td>
+        <td>2025-08-01 20:49:49</td>
+        <td></td>
+    </tr>
+        <tr style="font-weight:bold;"><td colspan="2">TOTAL</td><td>333.00</td><td colspan="3"></td></tr>
+</table>
